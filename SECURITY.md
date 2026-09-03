@@ -20,7 +20,7 @@ within two business days.
 - A key belongs on a **server**. Do not ship it to a browser or a mobile app, where every
   user can read it. For browser forms, relay through your own backend (see
   `examples/browser-relay.mjs` and the browser kit at
-  <https://github.com/hellojade-ai/hellojade-js>).
+  <https://github.com/hellojade-ai/leads-js>).
 
 ## What this client sends
 

@@ -1,7 +1,7 @@
 // A minimal server-side relay: your site's browser form posts here (same origin, no key
 // in the page), and this forwards it to hellojade with the key from the environment.
 // Pair it with the browser kit's <hellojade-lead-form relay-url="/api/lead">:
-// https://github.com/hellojade-ai/hellojade-js
+// https://github.com/hellojade-ai/leads-js
 //
 // Run: HELLOJADE_API_KEY=... node examples/browser-relay.mjs   (listens on 127.0.0.1:8080)
 import { createServer } from "node:http";

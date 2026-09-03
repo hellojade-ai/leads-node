@@ -29,5 +29,5 @@ All notable changes to `@hellojade/intake` are recorded here. The format follows
 - Dual ESM + CommonJS builds with type declarations; zero runtime dependencies; Node 18+.
 - Tests against a local HTTP stub covering every documented status.
 
-[0.1.1]: https://github.com/hellojade-ai/hellojade-node/releases/tag/v0.1.1
-[0.1.0]: https://github.com/hellojade-ai/hellojade-node/releases/tag/v0.1.0
+[0.1.1]: https://github.com/hellojade-ai/leads-node/releases/tag/v0.1.1
+[0.1.0]: https://github.com/hellojade-ai/leads-node/releases/tag/v0.1.0

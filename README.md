@@ -14,15 +14,15 @@ POSTs to when it has a lead for a hellojade customer.
 | OpenAPI contract | <https://intake.hellojade.ai/api/openapi.json> |
 | Integration brief (read it once, front to back) | <https://intake.hellojade.ai/api/INTEGRATION.md> |
 | Becoming a lead provider | <https://hellojade.ai/developers/provide-leads> |
-| Browser kit (web component + relay pattern) | <https://github.com/hellojade-ai/hellojade-js> |
-| Python kit | <https://github.com/hellojade-ai/hellojade-python> |
+| Browser kit (web component + relay pattern) | <https://github.com/hellojade-ai/leads-js> |
+| Python kit | <https://github.com/hellojade-ai/leads-python> |
 
 ## Install
 
 This package is **not published to npm yet**. Install it straight from GitHub, pinned to a tag:
 
 ```sh
-npm install github:hellojade-ai/hellojade-node#v0.1.1
+npm install github:hellojade-ai/leads-node#v0.1.1
 ```
 
 The `prepack`/`prepare` step builds `dist/` on install, so you get the compiled ESM and CJS

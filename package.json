@@ -4,13 +4,13 @@
   "description": "Node.js client for the hellojade Partner Intake API: submit leads with idempotency, retries and typed errors.",
   "license": "MIT",
   "author": "hellojade (https://hellojade.ai)",
-  "homepage": "https://github.com/hellojade-ai/hellojade-node#readme",
+  "homepage": "https://github.com/hellojade-ai/leads-node#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hellojade-ai/hellojade-node.git"
+    "url": "git+https://github.com/hellojade-ai/leads-node.git"
   },
   "bugs": {
-    "url": "https://github.com/hellojade-ai/hellojade-node/issues"
+    "url": "https://github.com/hellojade-ai/leads-node/issues"
   },
   "keywords": ["hellojade", "intake", "leads", "lead-generation", "api-client", "typescript"],
   "type": "module",
