@@ -26,3 +26,15 @@ export function parseRetryAfter(value: string | null, now: number = Date.now()):
   if (!Number.isNaN(date)) return Math.max(0, Math.ceil((date - now) / 1000));
   return 1;
 }
+
+/**
+ * The first value of a header that may appear more than once. hellojade's edge and its
+ * application each set X-Request-Id to the same value; `Headers.get()` joins duplicates
+ * with ", ", and the brief says to take the first.
+ */
+export function firstHeader(headers: Headers, name: string): string | null {
+  const raw = headers.get(name);
+  if (raw == null) return null;
+  const first = raw.split(",")[0]?.trim() ?? "";
+  return first.length > 0 ? first : null;
+}

@@ -306,3 +306,18 @@ test("backoffMs: exponential with jitter, capped", () => {
   assert.equal(backoffMs(DEFAULT_RETRY, 10, () => 0), 30_000);
   assert.equal(backoffMs(DEFAULT_RETRY, 1, () => 1), 1500);
 });
+
+test("requestId takes the FIRST value when the edge sends X-Request-Id twice", async () => {
+  stub.push({
+    status: 401,
+    body: { error: "unauthorized", request_id: "dup-1" },
+    headers: { "x-request-id": ["dup-1", "dup-1"] },
+  });
+  const r = await client().checkKey({ requestId: "dup-1" });
+  assert.equal(r.requestId, "dup-1");
+  stub.push({ status: 422, body: { error: "validation_failed", fields: { phone: "required" } }, headers: { "x-request-id": ["dup-2", "dup-2"] } });
+  await assert.rejects(client().submitLead({ first_name: "x" }, { idempotencyKey: "k" }), (e) => e.requestId === "dup-2");
+  stub.push({ status: 429, body: { error: "rate_limited" }, headers: { "retry-after": ["4", "4"] } });
+  await client({ retry: { maxAttempts: 1 } }).submitLead(LEAD, { idempotencyKey: "k" });
+  assert.deepEqual(sleeps, [4000]);
+});

@@ -22,7 +22,7 @@ POSTs to when it has a lead for a hellojade customer.
 This package is **not published to npm yet**. Install it straight from GitHub, pinned to a tag:
 
 ```sh
-npm install github:hellojade-ai/hellojade-node#v0.1.0
+npm install github:hellojade-ai/hellojade-node#v0.1.1
 ```
 
 The `prepack`/`prepare` step builds `dist/` on install, so you get the compiled ESM and CJS

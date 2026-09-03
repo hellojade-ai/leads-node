@@ -4,6 +4,15 @@ All notable changes to `@hellojade/intake` are recorded here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.1.1] — 2026-09-03
+
+### Fixed
+
+- `requestId` (and `Retry-After`) now take the **first** value when a header appears more than
+  once. hellojade's edge and application each set `X-Request-Id` to the same value, and `Headers.get()`
+  joins duplicates with `", "`, so 0.1.0 reported `"id, id"`. Found by running the key check
+  against the live host.
+
 ## [0.1.0] — 2026-09-03
 
 ### Added
@@ -20,4 +29,5 @@ All notable changes to `@hellojade/intake` are recorded here. The format follows
 - Dual ESM + CommonJS builds with type declarations; zero runtime dependencies; Node 18+.
 - Tests against a local HTTP stub covering every documented status.
 
+[0.1.1]: https://github.com/hellojade-ai/hellojade-node/releases/tag/v0.1.1
 [0.1.0]: https://github.com/hellojade-ai/hellojade-node/releases/tag/v0.1.0

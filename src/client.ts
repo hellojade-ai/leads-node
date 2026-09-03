@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { ApiError, RateLimitedError, TransportError, ValidationError } from "./errors.js";
-import { backoffMs, DEFAULT_RETRY, parseRetryAfter } from "./retry.js";
+import { backoffMs, DEFAULT_RETRY, firstHeader, parseRetryAfter } from "./retry.js";
 import type {
   Accepted,
   FetchLike,
@@ -13,7 +13,7 @@ import type {
   Vocabulary,
 } from "./types.js";
 
-export const VERSION = "0.1.0";
+export const VERSION = "0.1.1";
 export const DEFAULT_BASE_URL = "https://intake.hellojade.ai";
 
 const LOCAL_HOSTS = new Set(["127.0.0.1", "localhost", "[::1]"]);
@@ -92,7 +92,7 @@ export class IntakeClient {
       retryRateLimit: true,
       signal: options.signal,
     });
-    const rid = res.headers.get("x-request-id") ?? bodyRequestId(res.body);
+    const rid = firstHeader(res.headers, "x-request-id") ?? bodyRequestId(res.body);
     if (res.status === 422) {
       const fields = (res.body as { fields?: Record<string, string> } | null)?.fields ?? {};
       return { valid: true, status: 422, requestId: rid, required: Object.keys(fields).sort() };
@@ -146,7 +146,7 @@ export class IntakeClient {
       retryRateLimit: true,
       signal: options.signal,
     });
-    const rid = res.headers.get("x-request-id") ?? bodyRequestId(res.body);
+    const rid = firstHeader(res.headers, "x-request-id") ?? bodyRequestId(res.body);
     if (res.status === 202 || res.status === 200) {
       const b = (res.body ?? {}) as Partial<Accepted>;
       return {
@@ -178,7 +178,7 @@ export class IntakeClient {
         required: Array.isArray(b.required) ? b.required : [],
       };
     }
-    throw this.errorFor(res, res.headers.get("x-request-id"));
+    throw this.errorFor(res, firstHeader(res.headers, "x-request-id"));
   }
 
   /** Liveness. Returns the body on both 200 and 503 (`ok` says which); never retries. */
@@ -200,7 +200,7 @@ export class IntakeClient {
         oldest_pending_age_s: b.oldest_pending_age_s == null ? null : Number(b.oldest_pending_age_s),
       };
     }
-    throw this.errorFor(res, res.headers.get("x-request-id"));
+    throw this.errorFor(res, firstHeader(res.headers, "x-request-id"));
   }
 
   // ---------------------------------------------------------------------------
@@ -242,10 +242,10 @@ export class IntakeClient {
       }
 
       if (res.status === 429 && spec.retryRateLimit) {
-        const retryAfter = parseRetryAfter(res.headers.get("retry-after"));
+        const retryAfter = parseRetryAfter(firstHeader(res.headers, "retry-after"));
         rateLimitWaits += 1;
         if (rateLimitWaits > policy.maxRateLimitWaits) {
-          throw new RateLimitedError(res.body, res.headers.get("x-request-id"), retryAfter);
+          throw new RateLimitedError(res.body, firstHeader(res.headers, "x-request-id"), retryAfter);
         }
         await this.sleep(Math.max(retryAfter * 1000, backoffMs(policy, rateLimitWaits, this.random)));
         attempt -= 1; // a rate-limit wait is not a delivery attempt
@@ -253,7 +253,7 @@ export class IntakeClient {
       }
 
       if (res.status >= 500 && spec.retry) {
-        lastCause = new ApiError(res.status, res.body, res.headers.get("x-request-id"));
+        lastCause = new ApiError(res.status, res.body, firstHeader(res.headers, "x-request-id"));
         if (attempt >= maxAttempts) throw lastCause;
         await this.sleep(backoffMs(policy, attempt, this.random));
         continue;
